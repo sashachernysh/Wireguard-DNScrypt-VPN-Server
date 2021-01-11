@@ -13,7 +13,7 @@ take a look here : [dnscrypt changelog](https://github.com/DNSCrypt/dnscrypt-pro
 
 ## How to install :  
 * Use a fresh / clean **server** os  ( e.g. Ubuntu 20.04 is tested ) 
-* The server has to be prepared with my script base_setup.sh -> [repository](https://github.com/zzzkeil/base_setups)  
+* The server has to be prepared with my script base_setup.sh -> [repository](https://github.com/sashachernysh/base_setups)  
   * if the base is not installed, the script below will download this one for you, follow the instructions.  
 * Copy the lines for your system below, and run it and follow the instructions  
 
@@ -21,7 +21,7 @@ take a look here : [dnscrypt changelog](https://github.com/DNSCrypt/dnscrypt-pro
 
 ###### Server x86 - Ubuntu 20.04 :
 ```
-wget -O  wireguard-dkms_dnscrypt_blocklist_x86.sh https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/debian_ubuntu/wireguard-dkms_dnscrypt_blocklist_x86.sh
+wget -O  wireguard-dkms_dnscrypt_blocklist_x86.sh https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/debian_ubuntu/wireguard-dkms_dnscrypt_blocklist_x86.sh
 chmod +x wireguard-dkms_dnscrypt_blocklist_x86.sh
 ./wireguard-dkms_dnscrypt_blocklist_x86.sh
 ```
@@ -30,7 +30,7 @@ chmod +x wireguard-dkms_dnscrypt_blocklist_x86.sh
 ```
 (testing on a pi 4 on my home network)
 
-wget -O  wireguard-dkms_dnscrypt_blocklist_arm64.sh https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/debian_ubuntu/wireguard-dkms_dnscrypt_blocklist_arm64.sh
+wget -O  wireguard-dkms_dnscrypt_blocklist_arm64.sh https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/debian_ubuntu/wireguard-dkms_dnscrypt_blocklist_arm64.sh
 chmod +x wireguard-dkms_dnscrypt_blocklist_arm64.sh
 ./wireguard-dkms_dnscrypt_blocklist_arm64.sh
 
@@ -44,7 +44,7 @@ run ./add_client.sh or remove_client.sh
 
 @ the end you see the QR Code for your wiregaurd app.
 example:
-[![example](https://zeroaim.de/img/wgexsqr.png)](https://github.com/zzzkeil/Wireguard-DNScrypt-VPN-Server)
+[![example](https://zeroaim.de/img/wgexsqr.png)](https://github.com/sashachernysh/Wireguard-DNScrypt-VPN-Server)
 
 -----------------------------------------
 
