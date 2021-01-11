@@ -14,9 +14,9 @@ echo "these clientnames exsist/reserved by the setupscript!"
 read -p "client name: " -e -i newclient clientname
 echo "------"
 echo "Client IPv4"
-echo "don´use a ipv4 address under 10.8.0.30 and in this /24 subnet!"
+echo "don´use a ipv4 address under 10.66.66.30 and in this /24 subnet!"
 echo "these ipv4 exsist/reserved by the setupscript!"
-read -p "client IPv4: " -e -i 10.8.0.30 clientipv4
+read -p "client IPv4: " -e -i 10.66.66.30 clientipv4
 echo "------"
 echo "Client IPv6"
 echo "don´use a ipv4 address under fd42:42:42:42::30 and in this /64 subnet!"
@@ -48,7 +48,7 @@ echo "[Interface]
 Address = $clientipv4/32
 Address = $clientipv6/128
 PrivateKey = NEWCLKEY
-DNS = 10.8.0.1, fd42:42:42:42::1
+DNS = 10.66.66.1, fd42:42:42:42::1
 [Peer]
 Endpoint = IP01:$wg0port
 PublicKey = SK01
