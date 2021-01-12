@@ -4,7 +4,7 @@ echo " #########################################################################
 echo " # Wireguard-DNScrypt-VPN-Server setup script for Ubuntu 18.04 and above      #"
 echo " # My base_setup script is needed to install, if not installed this script    #"
 echo " # will automatically download the script, but you need to run this manualy   #"
-echo " # More information: https://github.com/zzzkeil/Wireguard-DNScrypt-VPN-Server #"
+echo " # More information: https://github.com/sashachernysh/Wireguard-DNScrypt-VPN-Server #"
 echo " ##############################################################################"
 echo " ##############################################################################"
 echo " # Version 2021.01.04 - status: just a arm64 test, maybe not working now      #"
@@ -32,7 +32,7 @@ fi
 if [[ -e /root/base_setup.README ]]; then
      echo "base_setup script installed - OK"
 	 else
-	 wget -O  base_setup.sh https://raw.githubusercontent.com/zzzkeil/base_setups/master/base_setup.sh
+	 wget -O  base_setup.sh https://raw.githubusercontent.com/sashachernysh/base_setups/master/base_setup.sh
          chmod +x base_setup.sh
 	 echo ""
 	 echo ""
@@ -67,7 +67,7 @@ if [[ -e /root/Wireguard-DNScrypt-VPN-Server.README ]]; then
 	 echo "/root/Wireguard-DNScrypt-VPN-Server.README"
 	 echo ""
 	 echo "For - News / Updates / Issues - check my github site"
-	 echo "https://github.com/zzzkeil/Wireguard-DNScrypt-VPN-Server"
+	 echo "https://github.com/sashachernysh/Wireguard-DNScrypt-VPN-Server"
 	 echo
 	 echo
 	 exit 1
@@ -109,8 +109,8 @@ cp /etc/default/ufw /root/script_backupfiles/ufw.orig
 cp /etc/ufw/before.rules /root/script_backupfiles/before.rules.orig
 cp /etc/ufw/before6.rules /root/script_backupfiles/before6.rules.orig
 sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw
-sed -i "1i# START WIREGUARD RULES\n# NAT table rules\n*nat\n:POSTROUTING ACCEPT [0:0]\n# Allow traffic from WIREGUARD client \n-A POSTROUTING -s 10.8.0.0/24 -o $inet -j MASQUERADE\nCOMMIT\n# END WIREGUARD RULES\n" /etc/ufw/before.rules
-sed -i '/# End required lines/a \\n-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A INPUT -p udp -m udp --dport 14443 -m conntrack --ctstate NEW -j ACCEPT\n-A INPUT -s 10.8.0.0/24 -p tcp -m tcp --dport 53 -m conntrack --ctstate NEW -j ACCEPT\n-A INPUT -s 10.8.0.0/24 -p udp -m udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT\n-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A FORWARD -i wg0 -o wg0 -m conntrack --ctstate NEW -j ACCEPT' /etc/ufw/before.rules
+sed -i "1i# START WIREGUARD RULES\n# NAT table rules\n*nat\n:POSTROUTING ACCEPT [0:0]\n# Allow traffic from WIREGUARD client \n-A POSTROUTING -s 10.66.66.0/24 -o $inet -j MASQUERADE\nCOMMIT\n# END WIREGUARD RULES\n" /etc/ufw/before.rules
+sed -i '/# End required lines/a \\n-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A INPUT -p udp -m udp --dport 14443 -m conntrack --ctstate NEW -j ACCEPT\n-A INPUT -s 10.66.66.0/24 -p tcp -m tcp --dport 53 -m conntrack --ctstate NEW -j ACCEPT\n-A INPUT -s 10.66.66.0/24 -p udp -m udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT\n-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A FORWARD -i wg0 -o wg0 -m conntrack --ctstate NEW -j ACCEPT' /etc/ufw/before.rules
 sed -i '/-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT/a \\n# allow outbound icmp\n-A ufw-before-output -p icmp -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT\n-A ufw-before-output -p icmp -m state --state ESTABLISHED,RELATED -j ACCEPT\n' /etc/ufw/before.rules
 sed -i "1i# START WIREGUARD RULES\n# NAT table rules\n*nat\n:POSTROUTING ACCEPT [0:0]\n# Allow traffic from WIREGUARD client \n\n-A POSTROUTING -s fd42:42:42:42::/112 -o $inet -j MASQUERADE\nCOMMIT\n# END WIREGUARD RULES\n" /etc/ufw/before6.rules
 sed -i '/# End required lines/a \\n-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A INPUT -p udp -m udp --dport 14443 -m conntrack --ctstate NEW -j ACCEPT\n-A INPUT -s fd42:42:42:42::1/64 -p tcp -m tcp --dport 53 -m conntrack --ctstate NEW -j ACCEPT\n-A INPUT -s fd42:42:42:42::1/64 -p udp -m udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT\n-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A FORWARD -i wg0 -o wg0 -m conntrack --ctstate NEW -j ACCEPT' /etc/ufw/before6.rules
@@ -158,30 +158,30 @@ wg pubkey < /etc/wireguard/keys/client5 > /etc/wireguard/keys/client5.pub
 
 ### -
 echo "[Interface]
-Address = 10.8.0.1/24
+Address = 10.66.66.1/24
 Address = fd42:42:42:42::1/112
 ListenPort = $wg0port
 PrivateKey = SK01
 # client1
 [Peer]
 PublicKey = PK01
-AllowedIPs = 10.8.0.11/32, fd42:42:42:42::11/128
+AllowedIPs = 10.66.66.11/32, fd42:42:42:42::11/128
 # client2
 [Peer]
 PublicKey = PK02
-AllowedIPs = 10.8.0.12/32, fd42:42:42:42::12/128
+AllowedIPs = 10.66.66.12/32, fd42:42:42:42::12/128
 # client3
 [Peer]
 PublicKey = PK03
-AllowedIPs = 10.8.0.13/32, fd42:42:42:42::13/128
+AllowedIPs = 10.66.66.13/32, fd42:42:42:42::13/128
 # client4
 [Peer]
 PublicKey = PK04
-AllowedIPs = 10.8.0.14/32, fd42:42:42:42::14/128
+AllowedIPs = 10.66.66.14/32, fd42:42:42:42::14/128
 # client5
 [Peer]
 PublicKey = PK05
-AllowedIPs = 10.8.0.15/32, fd42:42:42:42::15/128
+AllowedIPs = 10.66.66.15/32, fd42:42:42:42::15/128
 # -end of default clients
 " > /etc/wireguard/wg0.conf
 sed -i "s@SK01@$(cat /etc/wireguard/keys/server0)@" /etc/wireguard/wg0.conf
@@ -194,10 +194,10 @@ chmod 600 /etc/wireguard/wg0.conf
 
 ### -
 echo "[Interface]
-Address = 10.8.0.11/32
+Address = 10.66.66.11/32
 Address = fd42:42:42:42::11/128
 PrivateKey = CK01
-DNS = 10.8.0.1, fd42:42:42:42::1
+DNS = 10.66.66.1, fd42:42:42:42::1
 [Peer]
 Endpoint = IP01:$wg0port
 PublicKey = SK01
@@ -209,10 +209,10 @@ sed -i "s@IP01@$(hostname -I | awk '{print $1}')@" /etc/wireguard/client1.conf
 chmod 600 /etc/wireguard/client1.conf
 
 echo "[Interface]
-Address = 10.8.0.12/32
+Address = 10.66.66.12/32
 Address = fd42:42:42:42::12/128
 PrivateKey = CK02
-DNS = 10.8.0.1, fd42:42:42:42::1
+DNS = 10.66.66.1, fd42:42:42:42::1
 [Peer]
 Endpoint = IP01:$wg0port
 PublicKey = SK01
@@ -224,10 +224,10 @@ sed -i "s@IP01@$(hostname -I | awk '{print $1}')@" /etc/wireguard/client2.conf
 chmod 600 /etc/wireguard/client2.conf
 
 echo "[Interface]
-Address = 10.8.0.13/32
+Address = 10.66.66.13/32
 Address = fd42:42:42:42::13/128
 PrivateKey = CK03
-DNS = 10.8.0.1, fd42:42:42:42::1
+DNS = 10.66.66.1, fd42:42:42:42::1
 [Peer]
 Endpoint = IP01:$wg0port
 PublicKey = SK01
@@ -239,10 +239,10 @@ sed -i "s@IP01@$(hostname -I | awk '{print $1}')@" /etc/wireguard/client3.conf
 chmod 600 /etc/wireguard/client3.conf
 
 echo "[Interface]
-Address = 10.8.0.14/32
+Address = 10.66.66.14/32
 Address = fd42:42:42:42::14/128
 PrivateKey = CK04
-DNS = 10.8.0.1, fd42:42:42:42::1
+DNS = 10.66.66.1, fd42:42:42:42::1
 [Peer]
 Endpoint = IP01:$wg0port
 PublicKey = SK01
@@ -254,10 +254,10 @@ sed -i "s@IP01@$(hostname -I | awk '{print $1}')@" /etc/wireguard/client4.conf
 chmod 600 /etc/wireguard/client4.conf
 
 echo "[Interface]
-Address = 10.8.0.15/32
+Address = 10.66.66.15/32
 Address = fd42:42:42:42::15/128
 PrivateKey = CK05
-DNS = 10.8.0.1, fd42:42:42:42::1
+DNS = 10.66.66.1, fd42:42:42:42::1
 [Peer]
 Endpoint = IP01:$wg0port
 PublicKey = SK01
@@ -270,7 +270,7 @@ chmod 600 /etc/wireguard/client5.conf
 #
 ### setup unbound
 curl -o /var/lib/unbound/root.hints https://www.internic.net/domain/named.cache
-curl -o /etc/unbound/unbound.conf https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/configs/unbound.conf
+curl -o /etc/unbound/unbound.conf https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/configs/unbound.conf
 chown -R unbound:unbound /var/lib/unbound
 #
 ###setup DNSCrypt
@@ -279,14 +279,14 @@ wget -O /etc/dnscrypt-proxy/dnscrypt-proxy.tar.gz https://github.com/DNSCrypt/dn
 tar -xvzf /etc/dnscrypt-proxy/dnscrypt-proxy.tar.gz -C /etc/dnscrypt-proxy/
 mv -f /etc/dnscrypt-proxy/linux-arm64/* /etc/dnscrypt-proxy/
 cp /etc/dnscrypt-proxy/example-blocked-names.txt /etc/dnscrypt-proxy/blocklist.txt 
-curl -o /etc/dnscrypt-proxy/dnscrypt-proxy.toml https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/configs/dnscrypt-proxy.toml
-curl -o /etc/dnscrypt-proxy/dnscrypt-proxy-update.sh https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/configs/dnscrypt-proxy-update.sh
+curl -o /etc/dnscrypt-proxy/dnscrypt-proxy.toml https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/configs/dnscrypt-proxy.toml
+curl -o /etc/dnscrypt-proxy/dnscrypt-proxy-update.sh https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/configs/dnscrypt-proxy-update.sh
 chmod +x /etc/dnscrypt-proxy/dnscrypt-proxy-update.sh
 #
 ### setup blocklist and a allowlist from (anudeepND)"
 mkdir /etc/dnscrypt-proxy/utils/
 mkdir /etc/dnscrypt-proxy/utils/generate-domains-blocklists/
-curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-blocklist.conf https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/blocklist/domains-blocklist-default.conf
+curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-blocklist.conf https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/blocklist/domains-blocklist-default.conf
 curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-blocklist-local-additions.txt https://raw.githubusercontent.com/jedisct1/dnscrypt-proxy/master/utils/generate-domains-blocklist/domains-blocklist-local-additions.txt
 curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-time-restricted.txt https://raw.githubusercontent.com/jedisct1/dnscrypt-proxy/master/utils/generate-domains-blocklist/domains-time-restricted.txt
 curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-allowlist.txt https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/whitelist.txt
@@ -297,13 +297,13 @@ cd /etc/dnscrypt-proxy/utils/generate-domains-blocklists/
 ./generate-domains-blocklist.py > /etc/dnscrypt-proxy/blocklist.txt
 cd
 ## check if generate blocklist failed - file is empty
-curl -o /etc/dnscrypt-proxy/checkblocklist.sh https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/configs/checkblocklist.sh
+curl -o /etc/dnscrypt-proxy/checkblocklist.sh https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/configs/checkblocklist.sh
 chmod +x /etc/dnscrypt-proxy/checkblocklist.sh
 #
 ### create crontabs
 (crontab -l ; echo "50 23 * * 4 cd /etc/dnscrypt-proxy/utils/generate-domains-blocklists/ &&  ./generate-domains-blocklist.py > /etc/dnscrypt-proxy/blocklists.txt") | sort - | uniq - | crontab -
 (crontab -l ; echo "40 23 * * 4 curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-allowlist.txt https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/whitelist.txt") | sort - | uniq - | crontab -
-(crontab -l ; echo "30 23 * * 4 curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-blocklist.conf https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/blocklist/domains-blocklist-default.conf") | sort - | uniq - | crontab -
+(crontab -l ; echo "30 23 * * 4 curl -o /etc/dnscrypt-proxy/utils/generate-domains-blocklists/domains-blocklist.conf https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/blocklist/domains-blocklist-default.conf") | sort - | uniq - | crontab -
 (crontab -l ; echo "15 * * * 5 cd /etc/dnscrypt-proxy/ &&  ./etc/dnscrypt-proxy/checkblocklist.sh") | sort - | uniq - | crontab -
 (crontab -l ; echo "59 23 * * 4,5 /bin/systemctl restart dnscrypt-proxy.service") | sort - | uniq - | crontab -
 (crontab -l ; echo "59 23 * * 6 /etc/dnscrypt-proxy/dnscrypt-proxy-update.sh") | sort - | uniq - | crontab -
@@ -318,7 +318,7 @@ systemctl enable wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
 cp /etc/systemd/system/multi-user.target.wants/unbound.service /root/script_backupfiles/unbound.service.orig
 systemctl disable unbound
-curl -o /lib/systemd/system/unbound.service https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/configs/unbound.service
+curl -o /lib/systemd/system/unbound.service https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/configs/unbound.service
 systemctl enable unbound
 /etc/dnscrypt-proxy/dnscrypt-proxy -service install
 /etc/dnscrypt-proxy/dnscrypt-proxy -service start
@@ -329,10 +329,10 @@ echo "
 +++ do not delete this file +++
 Instructions coming soon 
 For - News / Updates / Issues - check my github site
-https://github.com/zzzkeil/Wireguard-DNScrypt-VPN-Server
+https://github.com/sashachernysh/Wireguard-DNScrypt-VPN-Server
 " > /root/Wireguard-DNScrypt-VPN-Server.README
-curl -o add_client.sh https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/tools/add_client.sh
-curl -o remove_client.sh https://raw.githubusercontent.com/zzzkeil/Wireguard-DNScrypt-VPN-Server/master/tools/remove_client.sh
+curl -o add_client.sh https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/tools/add_client.sh
+curl -o remove_client.sh https://raw.githubusercontent.com/sashachernysh/Wireguard-DNScrypt-VPN-Server/master/tools/remove_client.sh
 #
 ### finish
 clear
